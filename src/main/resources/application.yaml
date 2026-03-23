@@ -1,0 +1,68 @@
+httpServer:
+  publicApiHttpPort: 8080
+  privateApiHttpPort: 8085
+  privateApiHttpMetricsPath: /metrics
+  privateApiHttpReadinessPath: /system/readiness
+  privateApiHttpLivenessPath: /system/liveness
+
+db:
+  username: postgres
+  password: postgres
+  jdbcUrl: jdbc:postgresql://localhost:5432/ticket_service
+  poolName: ticket-service
+  maxPoolSize: 10
+  minIdle: 1
+
+flyway:
+  enabled: true
+
+kafka:
+  reservation-producer:
+    driverProperties:
+      bootstrap.servers: localhost:9092
+  payment-consumer:
+    driverProperties:
+      bootstrap.servers: localhost:9092
+      group.id: ticket-service
+    topics:
+      - payment-events
+reservation-events:
+  topic: reservation-events
+
+openapi:
+  management:
+    enabled: true
+    endpoint: /openapi
+    file:
+      - openapi/reservation-api.yaml
+      - openapi/pricing-api.yaml
+      - openapi/fraud-api.yaml
+
+resilient:
+  timeout:
+    pricing:
+      duration: 300ms
+    fraud:
+      duration: 400ms
+  retry:
+    pricing:
+      delay: 100ms
+      attempts: 3
+    fraud:
+      delay: 150ms
+      attempts: 2
+  circuitbreaker:
+    fraud:
+      failureRateThreshold: 50
+      waitDurationInOpenState: 5s
+      permittedCallsInHalfOpenState: 2
+      slidingWindowSize: 10
+      minimumRequiredCalls: 5
+  fallback:
+    fraud: {}
+
+reservation:
+  expiration:
+    job:
+      delay: 1m
+      initialDelay: 15s

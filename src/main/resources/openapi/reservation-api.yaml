@@ -1,0 +1,134 @@
+openapi: 3.0.3
+info:
+  title: Reservation API
+  version: 1.0.0
+paths:
+  /reservations:
+    post:
+      operationId: createReservation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId, seatNumber, customerId]
+              properties:
+                eventId:
+                  type: string
+                seatNumber:
+                  type: string
+                customerId:
+                  type: string
+      responses:
+        "200":
+          description: Created reservation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+  /reservations/{id}:
+    get:
+      operationId: getReservation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Reservation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+  /reservations/{id}/confirm:
+    post:
+      operationId: confirmReservation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Confirmed reservation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+  /reservations/{id}/cancel:
+    post:
+      operationId: cancelReservation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Cancelled reservation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reservation"
+  /events/{eventId}/availability:
+    get:
+      operationId: getAvailability
+      parameters:
+        - in: path
+          name: eventId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Availability summary
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [eventId, activeReservationCount, reservedSeats]
+                properties:
+                  eventId:
+                    type: string
+                  activeReservationCount:
+                    type: integer
+                  reservedSeats:
+                    type: array
+                    items:
+                      type: string
+components:
+  schemas:
+    Reservation:
+      type: object
+      required: [id, eventId, seatNumber, customerId, status, amount, currency, createdAt, expiresAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+        eventId:
+          type: string
+        seatNumber:
+          type: string
+        customerId:
+          type: string
+        status:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time

@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: Fraud API
+  version: 1.0.0
+paths:
+  /fraud/check:
+    post:
+      operationId: checkFraud
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [eventId, seatNumber, customerId]
+              properties:
+                eventId:
+                  type: string
+                seatNumber:
+                  type: string
+                customerId:
+                  type: string
+      responses:
+        "200":
+          description: Fraud decision
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [approved, reason]
+                properties:
+                  approved:
+                    type: boolean
+                  reason:
+                    type: string
