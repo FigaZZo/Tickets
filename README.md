@@ -11,15 +11,6 @@ The service allows a client to:
 - check event availability
 - automatically expire unpaid reservations
 
-The project also includes:
-
-- PostgreSQL persistence
-- Kafka producer and consumer
-- pricing and fraud integration facades
-- scheduler-based expiration
-- health and metrics endpoints
-- Docker Compose environment for local run
-
 ## Stack
 
 - Java 21
@@ -170,10 +161,3 @@ OpenAPI management endpoint is exposed at:
 - `src/main/java/com/example/reservation/integration` - pricing and fraud facades
 - `src/main/java/com/example/reservation/job` - scheduled expiration
 - `src/main/resources/db/migration` - Flyway migrations
-
-## Notes
-
-- This is an MVP, not a production-complete reservation platform.
-- Pricing and fraud integrations are currently stubbed behind facades.
-- Kafka and Postgres are required for application startup in the current setup.
-- Manual confirm endpoint exists, but the more realistic confirmation path is the Kafka payment event flow.
